@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface DeckRepository extends MongoRepository<Deck, String> {
-    
+
     Page<Deck> findByOwnerIdOrderByCreatedAtDesc(String ownerId, Pageable pageable);
 
     Optional<Deck> findByIdAndOwnerId(String id, String ownerId);
