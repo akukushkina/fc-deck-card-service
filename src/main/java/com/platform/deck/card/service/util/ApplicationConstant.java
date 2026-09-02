@@ -1,20 +1,6 @@
 package com.platform.deck.card.service.util;
 
 public class ApplicationConstant {
-    //    Messages
-    public static final String USERNAME_MSG = "Username field is mandatory";
-    public static final String EMAIL_MSG = "Email field is mandatory";
-    public static final String PASSWORD_MSG = "Password field is mandatory";
-
-    //    Description
-    public static final String USERNAME_DESC = "Name is used for login";
-    public static final String EMAIL_DESC = "User's email";
-    public static final String PASSWORD_DESC = "Password is used for login";
-
-    //    Example
-    public static final String USERNAME_EXAMPLE = "username";
-    public static final String EMAIL_EXAMPLE = "user@email.com";
-    public static final String PASSWORD_EXAMPLE = "VeryStrongPass12@~";
 
     //    HTTP code
     public static final String CODE_200 = "200";

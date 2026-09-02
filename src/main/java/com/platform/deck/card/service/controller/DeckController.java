@@ -19,7 +19,7 @@ public class DeckController extends BaseApiController{
         this.deckService = deckService;
     }
 
-    @PostMapping("/deck/create")
+    @PostMapping()
     public ResponseEntity<DeckResponse> createDeck(@RequestBody DeckRequest deckRequest, @RequestHeader("X-User-Id") String userId){
         log.info("Entered into create deck method");
 

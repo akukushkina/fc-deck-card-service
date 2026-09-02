@@ -1,5 +1,9 @@
 package com.platform.deck.card.service.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -15,6 +19,10 @@ import java.time.LocalDate;
         @CompoundIndex(name = "deck_created_idx", def = "{'deckId': 1, 'createdAt': 1}"),
         @CompoundIndex(name = "deck_next_review_idx", def = "{'deckId': 1, 'nextReviewDate': 1}")
 })
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Card {
 
     @Id

@@ -16,5 +16,5 @@ public interface CardRepository extends MongoRepository<Card, String> {
 
     void deleteByDeckId(String deckId);
 
-    List<Card> findByDeckIdAndNextReviewDateLessThanEqual(String deckId, LocalDate date, Pageable pageable);
+    List<Card> findByDeckIdAndNextReviewDateLessThanEqual(String deckId, LocalDate date);
 }
