@@ -2,11 +2,18 @@ package com.platform.deck.card.service.controller;
 
 import com.platform.deck.card.service.model.request.DeckRequest;
 import com.platform.deck.card.service.model.response.DeckResponse;
+import com.platform.deck.card.service.model.response.PagedResponse;
 import com.platform.deck.card.service.service.DeckService;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -26,5 +33,22 @@ public class DeckController extends BaseApiController{
         DeckResponse response = deckService.createDeck(deckRequest, userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @GetMapping()
+    public ResponseEntity<PagedResponse<DeckResponse>> listDecks(@RequestHeader("X-User-Id") String userId, @PageableDefault(page = 0, size = 20, sort = "createdAt", direction = Sort.Direction.DESC)Pageable pageable){
+        log.info("Entered into ListDecks method");
+
+        int page = pageable.getPageNumber();
+        int pageSize = pageable.getPageSize();
+        if(page < 0 ) {
+            page = 0;
+        }
+        if(pageSize < 1 || pageSize > 100) {
+            pageSize = 20;
+        }
+
+        PagedResponse<DeckResponse> response = deckService.getDecks(userId, page, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
