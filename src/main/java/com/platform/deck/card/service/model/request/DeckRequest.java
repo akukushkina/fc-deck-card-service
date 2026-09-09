@@ -9,7 +9,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DeckRequest {
-    @NotBlank(message = "Deck name is required")
     @Size(max = 100, message = "Deck name must be 100 characters or less")
     private String name;
 

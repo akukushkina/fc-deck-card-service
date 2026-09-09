@@ -10,4 +10,8 @@ public interface DeckService {
     PagedResponse<DeckResponse> getDecks(String userId, int page, int pageSize);
 
     DeckResponse showDeck(String userId, String deckId);
+
+    DeckResponse updateDeck(String userId, String deckId, DeckRequest request);
+
+    void deleteDeck(String userId, String deckId);
 }

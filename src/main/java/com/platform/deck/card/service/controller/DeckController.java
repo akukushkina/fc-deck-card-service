@@ -58,5 +58,24 @@ public class DeckController extends BaseApiController{
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
+    @PatchMapping("/{deckId}")
+    public ResponseEntity<DeckResponse> updateDeck(@RequestHeader("X-User-Id") String userId,
+                                                   @PathVariable("deckId") String deckId,
+                                                   @RequestBody @Valid DeckRequest request){
+        log.info("Entering into update deck by id method");
 
+        DeckResponse response = deckService.updateDeck(userId, deckId, request);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/{deckId}")
+    public ResponseEntity<Void> deleteDeck(@RequestHeader("X-User-Id") String userId,
+                                             @PathVariable("deckId") String deckId){
+        log.info("Entered into delete deck method");
+
+        deckService.deleteDeck(userId, deckId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }
