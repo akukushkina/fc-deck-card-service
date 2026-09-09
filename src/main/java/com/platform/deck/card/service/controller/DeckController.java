@@ -4,9 +4,9 @@ import com.platform.deck.card.service.model.request.DeckRequest;
 import com.platform.deck.card.service.model.response.DeckResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
 import com.platform.deck.card.service.service.DeckService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class DeckController extends BaseApiController{
     }
 
     @PostMapping()
-    public ResponseEntity<DeckResponse> createDeck(@RequestBody DeckRequest deckRequest, @RequestHeader("X-User-Id") String userId){
+    public ResponseEntity<DeckResponse> createDeck(@Valid @RequestBody DeckRequest deckRequest, @RequestHeader("X-User-Id") String userId){
         log.info("Entered into create deck method");
 
         DeckResponse response = deckService.createDeck(deckRequest, userId);
@@ -33,7 +33,7 @@ public class DeckController extends BaseApiController{
     }
 
     @GetMapping()
-    public ResponseEntity<PagedResponse<DeckResponse>> listDecks(@RequestHeader("X-User-Id") String userId, @PageableDefault(page = 0, size = 20, sort = "createdAt", direction = Sort.Direction.DESC)Pageable pageable){
+    public ResponseEntity<PagedResponse<DeckResponse>> listDecks(@RequestHeader("X-User-Id") String userId, @PageableDefault(page = 0, size = 20) Pageable pageable){
         log.info("Entered into ListDecks method");
 
         int page = pageable.getPageNumber();
@@ -48,4 +48,15 @@ public class DeckController extends BaseApiController{
         PagedResponse<DeckResponse> response = deckService.getDecks(userId, page, pageSize);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @GetMapping("/{deckId}")
+    public ResponseEntity<DeckResponse> getDeck(@RequestHeader("X-User-Id") String userId, @PathVariable("deckId") String deckId){
+        log.info("Entering into get deck by id method");
+
+        DeckResponse response = deckService.showDeck(userId, deckId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+
 }

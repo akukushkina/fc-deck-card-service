@@ -1,6 +1,8 @@
 package com.platform.deck.card.service.service.impl;
 
 import com.platform.deck.card.service.entity.Deck;
+import com.platform.deck.card.service.exception.ForbiddenException;
+import com.platform.deck.card.service.exception.ResourceNotFoundException;
 import com.platform.deck.card.service.mapper.DeckMapper;
 import com.platform.deck.card.service.model.request.DeckRequest;
 import com.platform.deck.card.service.model.response.DeckResponse;
@@ -49,15 +51,13 @@ public class DeckServiceImpl implements DeckService {
     public PagedResponse<DeckResponse> getDecks(String userId, int page, int pageSize) {
         log.info("Entering into getDecks method");
 
-        Pageable sanitizedPageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt"));
+        Pageable sanitizedPageable = PageRequest.of(page, pageSize);
 
         Page<Deck> deckPage = deckRepository.findByOwnerIdOrderByCreatedAtDesc(userId, sanitizedPageable);
 
-        List<DeckResponse> responses = new ArrayList<>();
-
-        for(Deck deck : deckPage.getContent()){
-            responses.add(deckMapper.mapToDeckResponse(deck));
-        }
+        List<DeckResponse> responses = deckPage.getContent().stream()
+                .map(deckMapper::mapToDeckResponse)
+                .toList();
 
         PagedResponse<DeckResponse> pagedResponse = PagedResponse.<DeckResponse>builder()
                 .content(responses)
@@ -70,5 +70,21 @@ public class DeckServiceImpl implements DeckService {
         log.info("List of decks for userId {}, number of decks: {}", userId, pagedResponse.getTotalElements());
 
         return pagedResponse;
+    }
+
+    @Override
+    public DeckResponse showDeck(String userId, String deckId) {
+
+            Deck deck = deckRepository.findById(deckId).orElseThrow(() -> new ResourceNotFoundException("No deck found with id: " + deckId));
+
+            if(!deck.getOwnerId().equals(userId)){
+                log.info("User id is not matching, userId {}", userId);
+                throw new ForbiddenException("Access denied");
+            }
+
+            DeckResponse response = deckMapper.mapToDeckResponse(deck);
+            log.info("Deck is: {}", response);
+
+            return response;
     }
 }

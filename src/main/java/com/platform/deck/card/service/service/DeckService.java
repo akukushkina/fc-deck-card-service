@@ -8,4 +8,6 @@ public interface DeckService {
     DeckResponse createDeck(DeckRequest deckRequest, String userId);
 
     PagedResponse<DeckResponse> getDecks(String userId, int page, int pageSize);
+
+    DeckResponse showDeck(String userId, String deckId);
 }
