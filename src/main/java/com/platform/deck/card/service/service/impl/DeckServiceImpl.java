@@ -3,12 +3,14 @@ package com.platform.deck.card.service.service.impl;
 import com.platform.deck.card.service.entity.Deck;
 import com.platform.deck.card.service.mapper.DeckMapper;
 import com.platform.deck.card.service.model.request.DeckRequest;
+import com.platform.deck.card.service.model.request.DeckUpdateRequest;
 import com.platform.deck.card.service.model.response.DeckResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
 import com.platform.deck.card.service.repository.DeckRepository;
 import com.platform.deck.card.service.service.CardService;
 import com.platform.deck.card.service.service.DeckService;
 import com.platform.deck.card.service.service.ServiceValidation;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -85,7 +87,7 @@ public class DeckServiceImpl implements DeckService {
     }
 
     @Override
-    public DeckResponse updateDeck(String userId, String deckId, DeckRequest request) {
+    public DeckResponse updateDeck(String userId, String deckId, @Valid DeckUpdateRequest request) {
         log.info("Entered into update deck method. Deck id: {}", deckId);
         Deck deck = serviceValidation.validateDeckOwnership(deckId, userId);
 

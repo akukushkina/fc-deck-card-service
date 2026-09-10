@@ -1,8 +1,10 @@
 package com.platform.deck.card.service.service;
 
 import com.platform.deck.card.service.model.request.DeckRequest;
+import com.platform.deck.card.service.model.request.DeckUpdateRequest;
 import com.platform.deck.card.service.model.response.DeckResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
+import jakarta.validation.Valid;
 
 public interface DeckService {
     DeckResponse createDeck(DeckRequest deckRequest, String userId);
@@ -11,7 +13,7 @@ public interface DeckService {
 
     DeckResponse showDeck(String userId, String deckId);
 
-    DeckResponse updateDeck(String userId, String deckId, DeckRequest request);
+    DeckResponse updateDeck(String userId, String deckId, @Valid DeckUpdateRequest request);
 
     void deleteDeck(String userId, String deckId);
 

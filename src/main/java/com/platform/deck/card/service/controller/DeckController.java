@@ -1,6 +1,7 @@
 package com.platform.deck.card.service.controller;
 
 import com.platform.deck.card.service.model.request.DeckRequest;
+import com.platform.deck.card.service.model.request.DeckUpdateRequest;
 import com.platform.deck.card.service.model.response.DeckResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
 import com.platform.deck.card.service.service.DeckService;
@@ -61,7 +62,7 @@ public class DeckController extends BaseApiController{
     @PatchMapping("/{deckId}")
     public ResponseEntity<DeckResponse> updateDeck(@RequestHeader("X-User-Id") String userId,
                                                    @PathVariable("deckId") String deckId,
-                                                   @RequestBody @Valid DeckRequest request){
+                                                   @RequestBody @Valid DeckUpdateRequest request){
         log.info("Entering into update deck by id method");
 
         DeckResponse response = deckService.updateDeck(userId, deckId, request);
