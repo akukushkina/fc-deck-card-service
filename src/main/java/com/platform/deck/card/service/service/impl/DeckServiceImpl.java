@@ -1,8 +1,6 @@
 package com.platform.deck.card.service.service.impl;
 
 import com.platform.deck.card.service.entity.Deck;
-import com.platform.deck.card.service.exception.ForbiddenException;
-import com.platform.deck.card.service.exception.ResourceNotFoundException;
 import com.platform.deck.card.service.mapper.DeckMapper;
 import com.platform.deck.card.service.model.request.DeckRequest;
 import com.platform.deck.card.service.model.response.DeckResponse;
@@ -10,6 +8,7 @@ import com.platform.deck.card.service.model.response.PagedResponse;
 import com.platform.deck.card.service.repository.DeckRepository;
 import com.platform.deck.card.service.service.CardService;
 import com.platform.deck.card.service.service.DeckService;
+import com.platform.deck.card.service.service.ServiceValidation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,11 +24,13 @@ public class DeckServiceImpl implements DeckService {
     private final DeckMapper deckMapper;
     private final DeckRepository deckRepository;
     private final CardService cardService;
+    private final ServiceValidation serviceValidation;
 
-    public DeckServiceImpl(DeckMapper deckMapper, DeckRepository deckRepository, CardService cardService) {
+    public DeckServiceImpl(DeckMapper deckMapper, DeckRepository deckRepository, CardService cardService, ServiceValidation serviceValidation) {
         this.deckMapper = deckMapper;
         this.deckRepository = deckRepository;
         this.cardService = cardService;
+        this.serviceValidation = serviceValidation;
     }
 
     @Override
@@ -75,12 +76,7 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public DeckResponse showDeck(String userId, String deckId) {
 
-            Deck deck = deckRepository.findById(deckId).orElseThrow(() -> new ResourceNotFoundException("No deck found with id: " + deckId));
-
-            if(!deck.getOwnerId().equals(userId)){
-                log.info("User id is not matching, userId {}", userId);
-                throw new ForbiddenException("Access denied");
-            }
+            Deck deck = serviceValidation.validateDeckOwnership(deckId, userId);
 
             DeckResponse response = deckMapper.mapToDeckResponse(deck);
             log.info("Deck is: {}", response);
@@ -91,12 +87,7 @@ public class DeckServiceImpl implements DeckService {
     @Override
     public DeckResponse updateDeck(String userId, String deckId, DeckRequest request) {
         log.info("Entered into update deck method. Deck id: {}", deckId);
-        Deck deck = deckRepository.findById(deckId).orElseThrow(() -> new ResourceNotFoundException("No deck found with id: " + deckId));
-
-        if(!deck.getOwnerId().equals(userId)){
-            log.info("User id is not matching, userId {}", userId);
-            throw new ForbiddenException("Access denied");
-        }
+        Deck deck = serviceValidation.validateDeckOwnership(deckId, userId);
 
         if(request.getName() != null) deck.setName(request.getName());
         if(request.getDescription() != null) deck.setDescription(request.getDescription());
@@ -113,15 +104,12 @@ public class DeckServiceImpl implements DeckService {
     public void deleteDeck(String userId, String deckId) {
         log.info("Entered into delete deck method, deck id: {}", deckId);
 
-        Deck deck = deckRepository.findById(deckId).orElseThrow(() -> new ResourceNotFoundException("No deck found with id: " + deckId));
-
-        if(!deck.getOwnerId().equals(userId)){
-            log.info("User id is not matching, userId {}", userId);
-            throw new ForbiddenException("Access denied");
-        }
+        serviceValidation.validateDeckOwnership(deckId, userId);
 
         cardService.deleteCardsFromDeck(deckId, userId);
 
         deckRepository.deleteById(deckId);
     }
+
+
 }

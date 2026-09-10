@@ -36,10 +36,13 @@ public class Card {
 
     private String back;
 
+    @Builder.Default
     private Float easeFactor = 2.5f;
 
+    @Builder.Default
     private Integer interval = 1;
 
+    @Builder.Default
     private LocalDate nextReviewDate = LocalDate.now();
 
     @CreatedDate
