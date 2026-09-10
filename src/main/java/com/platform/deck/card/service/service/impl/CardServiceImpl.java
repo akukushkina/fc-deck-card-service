@@ -91,9 +91,22 @@ public class CardServiceImpl implements CardService {
         return response;
     }
 
+    @Override
+    public void deleteCard(String userId, String deckId, String cardId) {
+        log.info("Entered into delete card method");
+
+        serviceValidation.validateDeckOwnership(deckId, userId);
+        serviceValidation.validateCardOwnership(cardId, userId);
+
+        cardRepository.deleteById(cardId);
+    }
+
 
     @Override
     public void deleteCardsFromDeck(String deckId, String userId) {
+        log.info("Entered into delete all cards in deck");
+        serviceValidation.validateDeckOwnership(deckId, userId);
 
+        cardRepository.deleteByDeckId(deckId);
     }
 }

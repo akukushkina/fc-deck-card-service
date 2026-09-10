@@ -49,8 +49,8 @@ public class CardController extends BaseApiController{
         if(page < 0){
             page = 0;
         }
-        if(pageSize < 200){
-            pageSize = 200;
+        if(pageSize < 1 || pageSize > 200){
+            pageSize = 20;
         }
 
         PagedResponse<CardResponse> response = cardService.getCards(userId, deckId, page, pageSize);
@@ -68,5 +68,16 @@ public class CardController extends BaseApiController{
         CardResponse response = cardService.updateCard(userId, deckId, cardId, request);
 
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    @DeleteMapping("/{cardId}")
+    public ResponseEntity<Void> deleteCard(@RequestHeader("X-User-Id") String userId,
+                                           @PathVariable("deckId") String deckId,
+                                           @PathVariable("cardId") String cardId){
+        log.info("Entered into delete card method");
+
+        cardService.deleteCard(userId, deckId, cardId);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

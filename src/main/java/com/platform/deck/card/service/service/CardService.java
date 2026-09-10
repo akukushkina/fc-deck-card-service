@@ -16,4 +16,5 @@ public interface CardService {
 
     CardResponse updateCard(String userId, String deckId, String cardId, CardUpdateRequest request);
 
+    void deleteCard(String userId, String deckId, String cardId);
 }
