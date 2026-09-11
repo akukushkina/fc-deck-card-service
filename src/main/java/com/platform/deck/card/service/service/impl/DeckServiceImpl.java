@@ -108,7 +108,7 @@ public class DeckServiceImpl implements DeckService {
 
         serviceValidation.validateDeckOwnership(deckId, userId);
 
-        cardService.deleteCardsFromDeck(deckId, userId);
+        cardService.deleteCardsFromDeck(deckId);
 
         deckRepository.deleteById(deckId);
     }

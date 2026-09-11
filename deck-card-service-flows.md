@@ -48,13 +48,13 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([PUT /api/v1/decks/deckId]) --> B{Deck exists\nin MongoDB?}
+    A([PATCH /api/v1/decks/deckId]) --> B{Deck exists\nin MongoDB?}
     B -- No --> C[Return HTTP 404\nDeck not found]
     B -- Yes --> D{Deck ownerId\n== X-User-Id?}
     D -- No --> E[Return HTTP 403\nForbidden]
-    D -- Yes --> F{name present\nand ≤ 100 chars?\ndescription ≤ 500 chars?}
+    D -- Yes --> F{if name present\nname ≤ 100 chars?\nif description present\ndescription ≤ 500 chars?}
     F -- No --> G[Return HTTP 400\nValidation error]
-    F -- Yes --> H[Update Deck in MongoDB]
+    F -- Yes --> H[Update provided fields\nin MongoDB]
     H --> I[Return HTTP 200\nUpdated deck representation]
 ```
 
@@ -114,14 +114,18 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    A([PUT /api/v1/decks/deckId/cards/cardId]) --> B{Card exists\nin MongoDB?}
-    B -- No --> C[Return HTTP 404\nCard not found]
-    B -- Yes --> D{Card ownerId\n== X-User-Id?}
+    A([PATCH /api/v1/decks/deckId/cards/cardId]) --> B{Deck exists\nin MongoDB?}
+    B -- No --> C[Return HTTP 404\nDeck not found]
+    B -- Yes --> D{Deck ownerId\n== X-User-Id?}
     D -- No --> E[Return HTTP 403\nForbidden]
-    D -- Yes --> F{front ≤ 1000 chars\nand back ≤ 2000 chars?}
-    F -- No --> G[Return HTTP 400\nValidation error]
-    F -- Yes --> H[Update Card in MongoDB]
-    H --> I[Return HTTP 200\nUpdated card representation]
+    D -- Yes --> F{Card exists\nin MongoDB?}
+    F -- No --> G[Return HTTP 404\nCard not found]
+    F -- Yes --> H{Card ownerId\n== X-User-Id?}
+    H -- No --> I[Return HTTP 403\nForbidden]
+    H -- Yes --> J{if front present\nfront ≤ 1000 chars?\nif back present\nback ≤ 2000 chars?}
+    J -- No --> K[Return HTTP 400\nValidation error]
+    J -- Yes --> L[Update provided fields\nin MongoDB]
+    L --> M[Return HTTP 200\nUpdated card representation]
 ```
 
 ---
@@ -140,7 +144,18 @@ flowchart TD
 
 ---
 
-## 10. Internal: Get Due Cards (called by study-service)
+## 10. Internal: Get Deck Owner (called by other services)
+
+```mermaid
+flowchart TD
+    A([GET /internal/decks/deckId/owner]) --> B{Deck exists\nin MongoDB?}
+    B -- No --> C[Return HTTP 404\nDeck not found]
+    B -- Yes --> D[Return HTTP 200\nownerId and deckId]
+```
+
+---
+
+## 12. Internal: Get Due Cards (called by study-service)
 
 ```mermaid
 flowchart TD
@@ -156,7 +171,7 @@ flowchart TD
 
 ---
 
-## 11. Internal: Update Card SM-2 State (called by study-service)
+## 13. Internal: Update Card SM-2 State (called by study-service)
 
 ```mermaid
 flowchart TD

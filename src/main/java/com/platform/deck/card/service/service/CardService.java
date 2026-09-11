@@ -8,7 +8,7 @@ import jakarta.validation.Valid;
 
 public interface CardService {
 
-    void deleteCardsFromDeck(String deckId, String userId);
+    void deleteCardsFromDeck(String deckId);
 
     CardResponse addCard(String userId, String deckId, @Valid CardRequest request);
 

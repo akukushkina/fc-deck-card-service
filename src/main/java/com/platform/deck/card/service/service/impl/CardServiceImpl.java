@@ -103,10 +103,8 @@ public class CardServiceImpl implements CardService {
 
 
     @Override
-    public void deleteCardsFromDeck(String deckId, String userId) {
+    public void deleteCardsFromDeck(String deckId) {
         log.info("Entered into delete all cards in deck");
-        serviceValidation.validateDeckOwnership(deckId, userId);
-
         cardRepository.deleteByDeckId(deckId);
     }
 }

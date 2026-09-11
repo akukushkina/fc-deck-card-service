@@ -35,7 +35,7 @@ public class ServiceValidation {
 
     public Card validateCardOwnership(String cardId, String userId){
 
-        Card card = cardRepository.findById(cardId).orElseThrow(() -> new ResourceNotFoundException("No card found wit id: " + cardId));
+        Card card = cardRepository.findById(cardId).orElseThrow(() -> new ResourceNotFoundException("No card found with id: " + cardId));
 
         if(!card.getOwnerId().equals(userId)){
             log.info("UserId is not matching ownerId. UserId: {}", userId);

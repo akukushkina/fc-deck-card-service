@@ -5,16 +5,18 @@
 - `POST   /api/v1/decks`
 - `GET    /api/v1/decks`
 - `GET    /api/v1/decks/{deckId}`
-- `PUT    /api/v1/decks/{deckId}`
+- `PATCH  /api/v1/decks/{deckId}`
 - `DELETE /api/v1/decks/{deckId}`
 - `POST   /api/v1/decks/{deckId}/cards`
 - `GET    /api/v1/decks/{deckId}/cards`
 - `GET    /api/v1/decks/{deckId}/cards/{cardId}`
-- `PUT    /api/v1/decks/{deckId}/cards/{cardId}`
+- `PATCH  /api/v1/decks/{deckId}/cards/{cardId}`
 - `DELETE /api/v1/decks/{deckId}/cards/{cardId}`
 
 **Internal endpoints**:
-- `GET /internal/decks/{deckId}/owner` — returns ownerId for cross-service ownership checks
+- `GET   /internal/decks/{deckId}/owner` — returns ownerId for cross-service ownership checks
+- `GET   /internal/decks/{deckId}/due-cards` — returns cards where nextReviewDate ≤ today (called by study-service)
+- `PATCH /internal/cards/{cardId}/sm2` — updates SM-2 fields on a card (called by study-service)
 
 **Key components**:
 
