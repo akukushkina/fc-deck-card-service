@@ -1,6 +1,5 @@
 package com.platform.deck.card.service.model.request;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record CardUpdateRequest(

@@ -50,4 +50,5 @@ public class Card {
 
     @LastModifiedDate
     private Instant updatedAt;
+
 }
