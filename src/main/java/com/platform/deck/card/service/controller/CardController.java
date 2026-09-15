@@ -80,4 +80,15 @@ public class CardController extends BaseApiController{
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @GetMapping("/{cardId}")
+    public ResponseEntity<CardResponse> getCard(@RequestHeader("X-User-Id") String userId,
+                                                @PathVariable("deckId") String deckId,
+                                                @PathVariable("cardId") String cardId){
+        log.info("Entering into get card method");
+
+        CardResponse response = cardService.fetchCard(userId, deckId, cardId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

@@ -1,6 +1,7 @@
 package com.platform.deck.card.service.service.impl;
 
 import com.platform.deck.card.service.entity.Card;
+import com.platform.deck.card.service.exception.ResourceNotFoundException;
 import com.platform.deck.card.service.mapper.CardMapper;
 import com.platform.deck.card.service.model.request.CardRequest;
 import com.platform.deck.card.service.model.request.CardUpdateRequest;
@@ -99,6 +100,19 @@ public class CardServiceImpl implements CardService {
         serviceValidation.validateCardOwnership(cardId, userId);
 
         cardRepository.deleteById(cardId);
+    }
+
+    @Override
+    public CardResponse fetchCard(String userId, String deckId, String cardId) {
+        log.info("Entering into fetch card method. CardId: {}", cardId);
+        serviceValidation.validateDeckOwnership(deckId, userId);
+
+        Card card = cardRepository.findByIdandDeckId(cardId, deckId);
+
+        CardResponse response = cardMapper.mapToCardResponse(card);
+        log.info("Card is: {}", response.id());
+
+        return response;
     }
 
 

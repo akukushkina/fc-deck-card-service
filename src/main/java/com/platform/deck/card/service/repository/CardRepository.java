@@ -24,4 +24,6 @@ public interface CardRepository extends MongoRepository<Card, String> {
 
     @Query("{ 'deckId': ?0, 'nextReviewDate': { '$lte': ?1 } }")
     List<Card> findByDeckIdAndNextReviewDateLessThanEqual(String deckId, LocalDate date,  int limit);
+
+    Card findByIdandDeckId(String cardId, String deckId);
 }
