@@ -109,15 +109,34 @@ graph TD
 
     SS -->|Feign: due cards, SM-2 updates| DCS
     STS -->|Feign: card SM-2 state| DCS
-    BS -->|Feign: read/write cards| DCS
+    BS -->|Feign: read/write cards + create AI-generated cards| DCS
 
     SS -->|study.session.completed\ncard.reviewed| K
     STS -->|streak.updated| K
-    BS -->|report.generated| K
+    BS -->|report.generated\nimport.job.completed\nimport.job.failed| K
     K -->|study.session.completed\ncard.reviewed| STS
+    K -->|import.job.created| BS
 ```
 
-## Observability
+## AI-Powered Card Generation
+
+batch-service handles AI card generation from uploaded files. deck-card-service is not involved in file handling or AI calls — it only receives standard `POST /api/v1/decks/{deckId}/cards` calls from batch-service via Feign after cards are extracted.
+
+**Flow:**
+```
+User uploads file (TXT, PDF, CSV, DOCX) → batch-service stores in S3
+  → Kafka: import.job.created
+    → batch-service consumer calls AI provider (OpenAI / AWS Bedrock)
+      → for each valid {front, back} pair:
+          POST /api/v1/decks/{deckId}/cards via Feign → deck-card-service
+        → Kafka: import.job.completed (or import.job.failed)
+```
+
+**Supported formats:** TXT, PDF, CSV (`front,back` columns), DOCX  
+**Max file size:** 10MB  
+**Processing:** asynchronous — user gets immediate acknowledgement, cards appear when job completes
+
+---
 
 All six services implement an identical observability stack:
 
@@ -125,7 +144,7 @@ All six services implement an identical observability stack:
 |---|---|
 | Structured logging | Logback + `logstash-logback-encoder`; JSON to stdout with fields: `timestamp`, `level`, `traceId`, `spanId`, `userId`, `service`, `message`, `context` |
 | Metrics | Micrometer + Prometheus; `/actuator/prometheus` per service |
-| Distributed tracing | OpenTelemetry Java Agent; W3C `traceparent` header propagated inbound HTTP → outbound Feign → Kafka headers → DB spans |
+| Distributed tracing | OpenTelemetry Java Agent; W3C `traceparent` header propagated inbound HTTP → outbound Feign → Kafka headers → DB spans → AI provider calls |
 | Service identity | `OTEL_SERVICE_NAME` env var set per service |
 
 Trace propagation flow:
@@ -227,6 +246,6 @@ Trigger: push to main, PR to main (in each service's own repo)
 Secrets management:
 - GitHub Actions encrypted secrets (configured per repo) → injected as env vars at runtime → mounted as Kubernetes Secrets
 - Never written to Dockerfile, pipeline YAML, or container layers
-- Each service repo configures only the secrets it needs (e.g. user-service needs `JWT_PRIVATE_KEY` and `MYSQL_PASSWORD`; deck-card-service needs only `MONGODB_URI`)
+- Each service repo configures only the secrets it needs (e.g. user-service needs `JWT_PRIVATE_KEY` and `MYSQL_PASSWORD`; deck-card-service needs only `MONGODB_URI`; batch-service needs `MONGODB_URI`, `AI_PROVIDER_API_KEY`, and `S3_BUCKET_NAME`)
 
 ---
