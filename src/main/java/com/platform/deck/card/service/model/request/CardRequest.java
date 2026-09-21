@@ -2,7 +2,9 @@ package com.platform.deck.card.service.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
+@Builder
 public record CardRequest(@NotBlank(message = "Front content is required")
                           @Size(max = 1000, message = "Front content must be 1000 characters or less")
                           String front,

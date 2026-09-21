@@ -1,7 +1,9 @@
 package com.platform.deck.card.service.model.request;
 
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
+@Builder
 public record CardUpdateRequest(
                           @Size(max = 1000, message = "Front content must be 1000 characters or less")
                           String front,

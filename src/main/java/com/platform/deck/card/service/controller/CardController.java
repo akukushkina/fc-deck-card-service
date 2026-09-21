@@ -6,6 +6,7 @@ import com.platform.deck.card.service.model.response.CardResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
 import com.platform.deck.card.service.service.CardService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.platform.deck.card.service.util.ApplicationConstant.HEADER_VALIDATION;
 
 
 @RestController
@@ -27,7 +29,7 @@ public class CardController extends BaseApiController{
     }
 
     @PostMapping()
-    public ResponseEntity<CardResponse> createCard(@RequestHeader("X-User-Id") String userId,
+    public ResponseEntity<CardResponse> createCard(@RequestHeader("X-User-Id") @Pattern(regexp = HEADER_VALIDATION, message = "X-User-Id must be a valid numeric MySQL ID") String userId,
                                                    @PathVariable("deckId") String deckId,
                                                    @Valid @RequestBody CardRequest request){
         log.info("Entering into create card method. Deck id: {}", deckId);

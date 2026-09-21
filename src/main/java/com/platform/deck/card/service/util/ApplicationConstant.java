@@ -19,4 +19,6 @@ public class ApplicationConstant {
     public static final String CODE_401_DESC = "Unauthorized - Authentication failed";
     public static final String CODE_404_DESC = "Not Found - Resource does not exist";
     public static final String CODE_500_DESC = "Internal Server Error - Unexpected failure";
+
+    public static final String HEADER_VALIDATION = "^[1-9][0-9]*$";
 }

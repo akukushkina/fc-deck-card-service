@@ -1,0 +1,82 @@
+<configuration>
+
+    <!-- ==========================================
+         PRODUCTION PROFILE — structured JSON logs
+         Active when: spring.profiles.active=prod
+         Output: one JSON object per log line
+         Consumed by: CloudWatch, Loki, Elasticsearch
+         ========================================== -->
+    <springProfile name="prod">
+
+        <appender name="JSON_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+
+                <!-- Include standard fields automatically:
+                     @timestamp, level, logger, message, stack_trace -->
+
+                <!-- MDC fields populated by OpenTelemetry Java Agent automatically.
+                     These allow you to correlate logs with traces in Grafana/Jaeger. -->
+                <includeMdcKeyName>traceId</includeMdcKeyName>
+                <includeMdcKeyName>spanId</includeMdcKeyName>
+
+                <!-- userId is set manually in your code via MDC.put("userId", userId).
+                     Add it at the start of each controller method or via a filter. -->
+                <includeMdcKeyName>userId</includeMdcKeyName>
+
+                <!-- Adds "service": "fc-deck-card-service" to every log line.
+                     Reads from spring.application.name in application.yml -->
+                <customFields>{"service":"fc-deck-card-service"}</customFields>
+
+                <!-- Use ISO8601 timestamps — readable by all log aggregators -->
+                <timestampPattern>yyyy-MM-dd'T'HH:mm:ss.SSS'Z'</timestampPattern>
+                <timeZone>UTC</timeZone>
+
+            </encoder>
+        </appender>
+
+        <!-- Package-level log levels for production -->
+        <logger name="com.platform" level="INFO"/>
+        <logger name="org.springframework.data.mongodb" level="WARN"/>
+        <logger name="org.springframework" level="WARN"/>
+
+        <root level="INFO">
+            <appender-ref ref="JSON_STDOUT"/>
+        </root>
+
+    </springProfile>
+
+
+    <!-- ==========================================
+         DEVELOPMENT PROFILE — human readable logs
+         Active when: no profile set, or profile != prod
+         Output: coloured, formatted plain text
+         ========================================== -->
+    <springProfile name="!prod">
+
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <!-- Pattern breakdown:
+                     %d{...}         — timestamp
+                     %highlight(...) — colour by log level (ERROR=red, WARN=yellow, INFO=green)
+                     %-5level        — log level padded to 5 chars
+                     %cyan(...)      — logger name in cyan
+                     %logger{36}     — class name truncated to 36 chars
+                     %msg            — the log message
+                     %n              — newline
+                     %ex             — exception stack trace if present -->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) %cyan(%logger{36}) - %msg%n%ex</pattern>
+            </encoder>
+        </appender>
+
+        <!-- More verbose logging in development -->
+        <logger name="com.platform" level="DEBUG"/>
+        <logger name="org.springframework.data.mongodb" level="INFO"/>
+        <logger name="org.springframework" level="INFO"/>
+
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+
+    </springProfile>
+
+</configuration>
