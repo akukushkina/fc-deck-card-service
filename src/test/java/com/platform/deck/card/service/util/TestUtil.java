@@ -10,10 +10,6 @@ import com.platform.deck.card.service.model.request.DeckUpdateRequest;
 import com.platform.deck.card.service.model.response.CardResponse;
 import com.platform.deck.card.service.model.response.DeckResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -23,7 +19,7 @@ public class TestUtil {
 
    public static final String DECK_ID = "deck-123";
    public static final String CARD_ID = "card-456";
-   public static final String USER_ID = "789";
+   public static final String USER_ID = "456";
    public static final String BASE_URL = "/api/v1/decks/" + DECK_ID + "/cards";
 
     public static OwnerResponse testOwnerResponse(){

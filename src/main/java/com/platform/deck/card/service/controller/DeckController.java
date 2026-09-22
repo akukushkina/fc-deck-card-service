@@ -6,12 +6,15 @@ import com.platform.deck.card.service.model.response.DeckResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
 import com.platform.deck.card.service.service.DeckService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import static com.platform.deck.card.service.util.ApplicationConstant.HEADER_VALIDATION;
 
 @RestController
 @Slf4j
@@ -25,7 +28,8 @@ public class DeckController extends BaseApiController{
     }
 
     @PostMapping()
-    public ResponseEntity<DeckResponse> createDeck(@Valid @RequestBody DeckRequest deckRequest, @RequestHeader("X-User-Id") String userId){
+    public ResponseEntity<DeckResponse> createDeck(@Valid @RequestBody DeckRequest deckRequest,
+                                                   @NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId){
         log.info("Entered into create deck method");
 
         DeckResponse response = deckService.createDeck(deckRequest, userId);
@@ -34,7 +38,8 @@ public class DeckController extends BaseApiController{
     }
 
     @GetMapping()
-    public ResponseEntity<PagedResponse<DeckResponse>> listDecks(@RequestHeader("X-User-Id") String userId, @PageableDefault(page = 0, size = 20) Pageable pageable){
+    public ResponseEntity<PagedResponse<DeckResponse>> listDecks(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
+                                                                 @PageableDefault(page = 0, size = 20) Pageable pageable){
         log.info("Entered into ListDecks method");
 
         int page = pageable.getPageNumber();
@@ -51,7 +56,8 @@ public class DeckController extends BaseApiController{
     }
 
     @GetMapping("/{deckId}")
-    public ResponseEntity<DeckResponse> getDeck(@RequestHeader("X-User-Id") String userId, @PathVariable("deckId") String deckId){
+    public ResponseEntity<DeckResponse> getDeck(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
+                                                @PathVariable("deckId") String deckId){
         log.info("Entering into get deck by id method");
 
         DeckResponse response = deckService.showDeck(userId, deckId);
@@ -60,7 +66,7 @@ public class DeckController extends BaseApiController{
     }
 
     @PatchMapping("/{deckId}")
-    public ResponseEntity<DeckResponse> updateDeck(@RequestHeader("X-User-Id") String userId,
+    public ResponseEntity<DeckResponse> updateDeck(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
                                                    @PathVariable("deckId") String deckId,
                                                    @RequestBody @Valid DeckUpdateRequest request){
         log.info("Entering into update deck by id method");
@@ -71,7 +77,7 @@ public class DeckController extends BaseApiController{
     }
 
     @DeleteMapping("/{deckId}")
-    public ResponseEntity<Void> deleteDeck(@RequestHeader("X-User-Id") String userId,
+    public ResponseEntity<Void> deleteDeck(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
                                              @PathVariable("deckId") String deckId){
         log.info("Entered into delete deck method");
 

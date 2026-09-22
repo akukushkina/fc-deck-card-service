@@ -6,6 +6,7 @@ import com.platform.deck.card.service.model.response.CardResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
 import com.platform.deck.card.service.service.CardService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +30,7 @@ public class CardController extends BaseApiController{
     }
 
     @PostMapping()
-    public ResponseEntity<CardResponse> createCard(@RequestHeader("X-User-Id") @Pattern(regexp = HEADER_VALIDATION, message = "X-User-Id must be a valid numeric MySQL ID") String userId,
+    public ResponseEntity<CardResponse> createCard(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
                                                    @PathVariable("deckId") String deckId,
                                                    @Valid @RequestBody CardRequest request){
         log.info("Entering into create card method. Deck id: {}", deckId);
@@ -40,7 +41,7 @@ public class CardController extends BaseApiController{
     }
 
     @GetMapping()
-    public ResponseEntity<PagedResponse<CardResponse>> listCards(@RequestHeader("X-User-Id") String userId,
+    public ResponseEntity<PagedResponse<CardResponse>> listCards(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
                                                                  @PathVariable("deckId") String deckId,
                                                                  @PageableDefault(page = 0, size = 200)Pageable pageable
                                                                  ){
@@ -61,7 +62,7 @@ public class CardController extends BaseApiController{
     }
 
     @PatchMapping("/{cardId}")
-    public ResponseEntity<CardResponse> updateCard(@RequestHeader("X-User-Id") String userId,
+    public ResponseEntity<CardResponse> updateCard(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
                                                    @PathVariable("deckId") String deckId,
                                                    @PathVariable("cardId") String cardId,
                                                    @RequestBody CardUpdateRequest request){
@@ -73,7 +74,7 @@ public class CardController extends BaseApiController{
     }
 
     @DeleteMapping("/{cardId}")
-    public ResponseEntity<Void> deleteCard(@RequestHeader("X-User-Id") String userId,
+    public ResponseEntity<Void> deleteCard(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
                                            @PathVariable("deckId") String deckId,
                                            @PathVariable("cardId") String cardId){
         log.info("Entered into delete card method");
@@ -84,7 +85,7 @@ public class CardController extends BaseApiController{
     }
 
     @GetMapping("/{cardId}")
-    public ResponseEntity<CardResponse> getCard(@RequestHeader("X-User-Id") String userId,
+    public ResponseEntity<CardResponse> getCard(@NotBlank(message = HEADER_VALIDATION) @RequestHeader("X-User-Id") String userId,
                                                 @PathVariable("deckId") String deckId,
                                                 @PathVariable("cardId") String cardId){
         log.info("Entering into get card method");
