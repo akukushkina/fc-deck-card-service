@@ -24,7 +24,7 @@ public class TestUtil {
 
     public static OwnerResponse testOwnerResponse(){
         return OwnerResponse.builder()
-                .deckId("123")
+                .deckId("deck-123")
                 .userId("456")
                 .build();
     }

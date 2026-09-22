@@ -47,7 +47,8 @@ public class InternalCallsController {
     }
 
     @PatchMapping("/cards/{cardId}/sm2")
-    public ResponseEntity<Sm2UpdateResponse> updateSm2(@PathVariable("cardId") String cardId, @RequestBody @Valid Sm2UpdateRequest request){
+    public ResponseEntity<Sm2UpdateResponse> updateSm2(@PathVariable("cardId") String cardId,
+                                                       @RequestBody @Valid Sm2UpdateRequest request){
         log.info("Entered into update SM2 in card {}", cardId);
 
         Sm2UpdateResponse response = internalCallsService.updateSm(cardId, request);
