@@ -115,34 +115,24 @@ public class CardServiceImplTest {
     class FetchCard{
         @Test
         void FetchCard_ShouldReturnCardWithGivenId() {
-            int page = 0;
-            int pageSize = 10;
-            Pageable pageable = PageRequest.of(page, pageSize);
 
             Card card = testCard();
             CardResponse cardResponse = testCardResponse();
 
-            List<Card> cardList = List.of(card);
-            Page<Card> cardPage = new PageImpl<>(cardList, pageable, 1);
-
-            when(cardRepository.findByDeckIdAndOwnerIdOrderByCreatedAtDesc(DECK_ID, USER_ID, pageable))
-                    .thenReturn(cardPage);
+            when(cardRepository.findByIdandDeckId(USER_ID, DECK_ID))
+                    .thenReturn(card);
 
             when(cardMapper.mapToCardResponse(card)).thenReturn(cardResponse);
 
-            PagedResponse<CardResponse> actualResponse = cardService.getCards(USER_ID, DECK_ID, page, pageSize);
+            CardResponse actualResponse = cardService.fetchCard(USER_ID, DECK_ID, CARD_ID);
 
             assertNotNull(actualResponse);
-            assertEquals(1, actualResponse.getContent().size());
-            assertEquals(cardResponse, actualResponse.getContent().get(0));
-            assertEquals(0, actualResponse.getPage());
-            assertEquals(10, actualResponse.getPageSize());
-            assertEquals(1, actualResponse.getTotalElements());
-            assertEquals(1, actualResponse.getTotalPages());
+            assertEquals(expectedResponse.id(), cardResponse.id());
+            assertEquals(expectedResponse.front(), cardResponse.front());
 
             InOrder inOrder = inOrder(serviceValidation, cardRepository, cardMapper);
             inOrder.verify(serviceValidation).validateDeckOwnership(DECK_ID, USER_ID);
-            inOrder.verify(cardRepository).findByDeckIdAndOwnerIdOrderByCreatedAtDesc(DECK_ID, USER_ID, pageable);
+            inOrder.verify(cardRepository).findByIdandDeckId(USER_ID, DECK_ID);
             inOrder.verify(cardMapper).mapToCardResponse(card);
         }
 }
@@ -212,7 +202,4 @@ public class CardServiceImplTest {
             verify(cardRepository, times(1)).deleteByDeckId(DECK_ID);
         }
     }
-//    updateCard — front only, back only, both null
-//    deleteCard — happy path
-//    deleteCardsFromDeck — verify cardRepository.deleteByDeckId called
 }

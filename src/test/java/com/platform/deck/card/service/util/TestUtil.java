@@ -20,7 +20,7 @@ import java.util.List;
 public class TestUtil {
 
    public static final String DECK_ID = "deck-123";
-   public static final String CARD_ID = "card-456";
+   public static final String CARD_ID = "456";
    public static final String USER_ID = "456";
    public static final String BASE_URL = "/api/v1/decks/" + DECK_ID + "/cards";
 
