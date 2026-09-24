@@ -1,5 +1,7 @@
 package com.platform.deck.card.service.util;
 
+import com.platform.deck.card.service.entity.Card;
+import com.platform.deck.card.service.entity.Deck;
 import com.platform.deck.card.service.model.internal.OwnerResponse;
 import com.platform.deck.card.service.model.internal.Sm2UpdateRequest;
 import com.platform.deck.card.service.model.internal.Sm2UpdateResponse;
@@ -24,7 +26,7 @@ public class TestUtil {
 
     public static OwnerResponse testOwnerResponse(){
         return OwnerResponse.builder()
-                .deckId("123")
+                .deckId("deck-123")
                 .userId("456")
                 .build();
     }
@@ -88,8 +90,34 @@ public class TestUtil {
                 .build();
     }
 
+    public static Card testCard(){
+        return Card.builder()
+                .id("1239")
+                .deckId("145")
+                .ownerId("768")
+                .front("Das Hund")
+                .back("A dog")
+                .easeFactor(2.5f)
+                .interval(1)
+                .nextReviewDate(LocalDate.now())
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+    }
+
     public static DeckResponse testDeckResponse(){
         return DeckResponse.builder()
+                .id("145")
+                .ownerId("567")
+                .name("German")
+                .description("")
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+    }
+
+    public static Deck testDeck() {
+        return Deck.builder()
                 .id("145")
                 .ownerId("567")
                 .name("German")
