@@ -5,6 +5,7 @@ import com.platform.deck.card.service.model.request.CardRequest;
 import com.platform.deck.card.service.model.request.CardUpdateRequest;
 import com.platform.deck.card.service.model.response.CardResponse;
 import com.platform.deck.card.service.model.response.PagedResponse;
+import com.platform.deck.card.service.service.CardService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

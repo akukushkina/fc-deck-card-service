@@ -2,6 +2,7 @@ package com.platform.deck.card.service.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.platform.deck.card.service.model.response.CardResponse;
+import com.platform.deck.card.service.service.InternalCallsService;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
