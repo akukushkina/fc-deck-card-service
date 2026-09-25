@@ -33,8 +33,9 @@ jobs:
           REPOSITORY: fc/fc-deck-card-service
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          FULL_IMAGE="\({REGISTRY}/\){REPOSITORY}"
           docker build \
-            -t "\({REGISTRY}/\){REPOSITORY}:${IMAGE_TAG}" \
-            -t "\({REGISTRY}/\){REPOSITORY}:latest" \
+            -t "\({FULL_IMAGE}:\){IMAGE_TAG}" \
+            -t "${FULL_IMAGE}:latest" \
             .
-          docker push --all-tags "\({REGISTRY}/\){REPOSITORY}"
+          docker push --all-tags "${FULL_IMAGE}"
