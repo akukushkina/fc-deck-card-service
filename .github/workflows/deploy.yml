@@ -46,3 +46,5 @@ jobs:
             -t "$REGISTRY/$REPOSITORY:$IMAGE_TAG" \
             -t "$REGISTRY/$REPOSITORY:latest" .
           docker push --all-tags "$REGISTRY/$REPOSITORY"
+
+#
