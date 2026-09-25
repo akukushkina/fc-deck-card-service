@@ -27,14 +27,18 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build, tag, and push image to Amazon Ecr
+      - name: Build, tag, and push image to Amazon ECR
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: fc/fc-deck-card-service
           IMAGE_TAG: ${{ github.sha }}
         run: |
+          IMAGE_URI="$REGISTRY/$REPOSITORY"
+
           docker build \
-            -t "\(REGISTRY/\)REPOSITORY:$IMAGE_TAG" \
-            -t "\(REGISTRY/\)REPOSITORY:latest" \
+            -t "$IMAGE_URI:$IMAGE_TAG" \
+            -t "$IMAGE_URI:latest" \
             .
-          docker push --all-tags "\(REGISTRY/\)REPOSITORY"
+
+          docker push "$IMAGE_URI:$IMAGE_TAG"
+          docker push "$IMAGE_URI:latest"
