@@ -34,6 +34,6 @@ jobs:
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build \
-            -t "\(REGISTRY/\)REPOSITORY:$IMAGE_TAG" \
+            -t "\({REGISTRY}/\){REPOSITORY}:\({IMAGE_TAG}" \
             -t "\(REGISTRY/\)REPOSITORY:latest" .
-          docker push --all-tags "\(REGISTRY/\)REPOSITORY"
+          docker push --all-tags "\){REGISTRY}/${REPOSITORY}"
