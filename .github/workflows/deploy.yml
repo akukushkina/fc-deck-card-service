@@ -59,3 +59,19 @@ jobs:
             -t "${REGISTRY}/${REPOSITORY}:${IMAGE_TAG}" \
             -t "${REGISTRY}/${REPOSITORY}:latest" .
           docker push --all-tags "${REGISTRY}/${REPOSITORY}"
+
+      - name: Inspect OIDC claims
+        id: oidc
+        shell: bash
+        run: |
+          response="$(curl --fail --silent \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=sts.amazonaws.com")"
+
+          token="$(jq -r '.value' <<< "$response")"
+          payload="$(cut -d '.' -f2 <<< "$token")"
+
+          # Add base64 padding if needed.
+          payload="$payload$(printf '%*s' $(( (4 - ${#payload} % 4) % 4 )) '' | tr ' ' '=')"
+
+          echo "$payload" | base64 --decode | jq '{sub, aud, repository, event_name, ref, sha}'
