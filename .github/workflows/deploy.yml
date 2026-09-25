@@ -24,7 +24,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: ./mvnw clean package -DskipTests
+        run: mvn -B package -DskipTests
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -46,5 +46,3 @@ jobs:
             -t "$REGISTRY/$REPOSITORY:$IMAGE_TAG" \
             -t "$REGISTRY/$REPOSITORY:latest" .
           docker push --all-tags "$REGISTRY/$REPOSITORY"
-
-#
