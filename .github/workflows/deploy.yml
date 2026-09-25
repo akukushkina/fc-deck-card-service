@@ -46,3 +46,11 @@ jobs:
             -t "\(REGISTRY/\)REPOSITORY:$IMAGE_TAG" \
             -t "\(REGISTRY/\)REPOSITORY:latest" .
           docker push --all-tags "\(REGISTRY/\)REPOSITORY"
+
+      - name: Inspect GitHub context
+        run: |
+          echo "event_name=${{ github.event_name }}"
+          echo "ref=${{ github.ref }}"
+          echo "ref_name=${{ github.ref_name }}"
+          echo "repository=${{ github.repository }}"
+          echo "sha=${{ github.sha }}"
